@@ -13,5 +13,3 @@ pub trait State<T>: Clone {
     fn next_action(&self) -> Option<T>;
     fn do_action(&mut self, action: &T) -> f32;
 }
-
-

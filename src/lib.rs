@@ -9,8 +9,7 @@
     unused_qualifications
 )]
 
-pub mod tree;
 pub mod node;
 pub mod state;
 pub mod strategies;
-
+pub mod tree;

@@ -167,7 +167,10 @@ mod tests {
 
         // Increase reward manually and check the node is selected
         leaf.borrow_mut().total_reward = 0.5;
-        assert_eq!(node.borrow().best_child().unwrap().borrow().total_reward, 0.5);
+        assert_eq!(
+            node.borrow().best_child().unwrap().borrow().total_reward,
+            0.5
+        );
     }
 
     #[test]

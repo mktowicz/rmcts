@@ -12,7 +12,6 @@
 use crate::node::NodeRef;
 use crate::state::State;
 
-
 pub trait SelectionStrategy<T, S>
 where
     S: State<T>,
@@ -52,4 +51,3 @@ where
 {
     fn backpropagate(&mut self, node: &mut NodeRef<T, S>, value: f32);
 }
-
