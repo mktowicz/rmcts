@@ -81,7 +81,7 @@ where
     fn select(&self) -> Option<NodeRef<T, S>> {
         let mut child = Rc::clone(&self.root);
 
-        while child.borrow().children.len() > 0 {
+        while !child.borrow().children.is_empty() {
             let next = match child.borrow().children.iter().max_by(|a, b| {
                 if a.borrow().visits == 0 {
                     return std::cmp::Ordering::Greater;
@@ -111,16 +111,12 @@ where
     fn expand(&mut self, node: &mut NodeRef<T, S>) -> Option<NodeRef<T, S>> {
         let mut curr_state = node.borrow().state.clone();
 
-        loop {
-            if let Some(action) = curr_state.next_action() {
-                let mut state = node.borrow().state.clone();
-                state.do_action(&action);
-                curr_state.do_action(&action);
-                let new_node = Node::new(action, state);
-                self.add_node(new_node, node);
-            } else {
-                break;
-            }
+        while let Some(action) = curr_state.next_action() {
+            let mut state = node.borrow().state.clone();
+            state.do_action(&action);
+            curr_state.do_action(&action);
+            let new_node = Node::new(action, state);
+            self.add_node(new_node, node);
         }
 
         node.borrow().child_at(0)
@@ -136,12 +132,8 @@ where
         let mut total_reward = 0.0;
         let mut current_state = node.borrow().state.clone();
 
-        loop {
-            if let Some(action) = current_state.next_action() {
-                total_reward += current_state.do_action(&action);
-            } else {
-                break;
-            }
+        while let Some(action) = current_state.next_action() {
+            total_reward += current_state.do_action(&action);
         }
 
         total_reward
@@ -155,6 +147,7 @@ where
 {
     fn backpropagate(&mut self, node: &mut NodeRef<T, S>, value: f32) {
         let child = node;
+
         loop {
             child.borrow_mut().total_reward += value;
             child.borrow_mut().visits += 1;
